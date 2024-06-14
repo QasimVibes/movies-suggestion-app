@@ -1,13 +1,13 @@
-export default function Card() {
+export default function Card({...item}) {
   return (
     <>
       <div className="inline-block  bg-transparent ">
         <div className="w-[177px] h-[263px]  overflow-hidden  transition-shadow duration-300 ease-in-out">
           <div className="mr-[11px]">
             <img
-              src="https://upload.wikimedia.org/wikipedia/en/d/dc/Greencardposter.jpg"
-              alt="#"
-              className="rounded-[20px] object-cover "
+              src={`https://image.tmdb.org/t/p/original${item?.backdrop_path}`}
+              alt={item?.title}
+              className="rounded-[20px] object-cover w-[177px] h-[263px]   "
             />
           </div>
         </div>

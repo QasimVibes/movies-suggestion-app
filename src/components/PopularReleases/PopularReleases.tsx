@@ -1,5 +1,15 @@
 import Card from "../Card/Card";
+import { useEffect} from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchMovieCard } from "../../Store/Slices/MovieCardSlice";
+import { AnyAction, ThunkDispatch } from "@reduxjs/toolkit";
+import { RootState } from "../../Store/Store";
 export default function PopularReleases() {
+  const dispatch: ThunkDispatch<RootState, void, AnyAction> = useDispatch();
+  useEffect(() => {
+    dispatch(fetchMovieCard());
+  },[dispatch])
+  const stateData = useSelector((state: any) => state.movieCard.releasesMovies);
   return (
     <>
       
@@ -9,21 +19,10 @@ export default function PopularReleases() {
       </h3>
       <div className="flex overflow-x-scroll hide-scroll-bar">
         <div className="flex flex-nowrap  ">
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+
+        {stateData?.results?.map((item: any) => (
+            <Card key={item.id} {...item} />
+          ))}
 
         </div>
       </div>
