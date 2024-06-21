@@ -1,5 +1,4 @@
-import Card from "../components/Card/Card";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AnyAction, ThunkDispatch } from "@reduxjs/toolkit";
@@ -24,25 +23,31 @@ export default function Search() {
 
   return (
     <>
-      <div className="mx-[80px] mb-[85px]">
-        <div className="mb-[14px]">
-          <h1 className="font-roboto text-[15px] font-[500] leading-[10.95px] text-black">
+      <div className="lg:mx-[80px] lg:mb-[85px] lg:mt-[24px] my-[20px] mx-[20px] relative">
+        <div className="lg:mb-[14px]">
+          <h1 className="font-roboto text-[15px] font-[500] leading-[10.95px] text-black hidden lg:block">
             Showing search results for:{" "}
             <span className="font-roboto text-[20px] font-[500] leading-[14.6px] text-[#7D7D7D]">
               {searchQuery}
             </span>
           </h1>
         </div>
-        <div className="pt-[20px] ">
-          <div className="grid grid-cols-6 gap-y-[20px]">
+        <div className="lg:pt-[20px] relative">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-y-[31px] sm:gap-y-[20px] gap-x-[20px] sm:gap-x-[20px] relative">
             {stateData?.map((item: any) =>
               item.backdrop_path !== null ? (
-                <Card
-                  key={item.id}
-                  {...item}
-                  size="w-[197px] h-[287px]"
-                  margin="mx-[10px]"
-                />
+                <Link key={item.id} to={`/movie/${item.id}`}>
+                  <div className="relative">
+                    <img
+                      src={`https://image.tmdb.org/t/p/original${item?.poster_path}`}
+                      alt={item?.title}
+                      className="rounded-[20px] object-cover w-full h-full"
+                    />
+                    <div className="absolute top-[17px] left-[12px] text-white font-caros-bold text-[15px] font-semibold leading-[9.24px] text-left">
+                      ⭐ {item.vote_average.toFixed(1)}
+                    </div>
+                  </div>
+                </Link>
               ) : null
             )}
           </div>

@@ -13,13 +13,13 @@ export default function Trending() {
 
   return (
     <div className="flex flex-col">
-      <h3 className="font-roboto text-[20px] font-[500] leading-[23.44px] mb-[23px] ">
+      <h3 className="font-roboto text-[20px] font-[500] leading-[23.44px] md:mb-[23px] mb-[11px] ">
         Trending
       </h3>
       <div className="flex overflow-x-scroll hide-scroll-bar">
         <div className="flex flex-nowrap  ">
           {stateData?.results?.map((item: any) => (
-            <Card key={item.id} {...item} />
+            <Card key={item.id} {...item} reviewStar={true} />
           ))}
         </div>
       </div>

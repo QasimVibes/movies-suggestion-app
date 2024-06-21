@@ -23,7 +23,7 @@ export const fetchMovies = createAsyncThunk(
       return moviesData;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        "Something went wrong while fetching movies data"
+        "Something went wrong while Searching movies data"
       );
     }
   }

@@ -1,21 +1,27 @@
-export default function Card({
-  margin = "mr-[22px]",
-  size = "w-[177px] h-[263px]",
-  ...item
-}) {
+import { Link } from "react-router-dom";
+
+export default function Card({ reviewStar = false, ...item }) {
   return (
     <>
-      <div className="inline-block  bg-transparent ">
-        <div
-          className={`${size} overflow-hidden  transition-shadow duration-300 ease-in-out`}
-        >
-          <div className={`${margin} `}>
-            <img
-              src={`https://image.tmdb.org/t/p/original${item?.backdrop_path}`}
-              alt={item?.title}
-              className={`rounded-[20px] object-cover ${size}`}
-            />
-          </div>
+      <div className="inline-block bg-transparent relative">
+        <div className="w-[158px] h-[234px] md:w-[177px] md:h-[263px] mr-[21px] overflow-hidden transition-shadow duration-300 ease-in-out relative">
+          {item?.poster_path && (
+            <Link to={`/movie/${item.id}`}>
+              <div className="relative">
+                <img
+                  src={`https://image.tmdb.org/t/p/original${item.poster_path}`}
+                  alt={item.title || "Movie"}
+                  className="rounded-[20px] object-cover w-[158px] h-[234px] md:w-[177px] md:h-[263px]"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-15 rounded-[20px]"></div>
+              </div>
+              {reviewStar && (
+                <div className="absolute top-[17px] left-[12px] text-white font-caros-bold text-[15px] font-semibold leading-[9.24px] text-left">
+                  ⭐ {item.vote_average.toFixed(1)}
+                </div>
+              )}
+            </Link>
+          )}
         </div>
       </div>
     </>
