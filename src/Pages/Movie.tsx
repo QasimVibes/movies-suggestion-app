@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AnyAction, ThunkDispatch } from "@reduxjs/toolkit";
 import { RootState } from "../store/Store";
@@ -10,16 +10,20 @@ import { Loading, Error } from "../components";
 export default function Movie(): JSX.Element {
   const { id } = useParams();
   const dispatch: ThunkDispatch<RootState, void, AnyAction> = useDispatch();
-  const { details, trailer, similarMovies, isLoading, isError } = useSelector<
-    AppState,
-    MovieDetailsState
-  >((state) => state.movieDetails);
-
+  const { details, trailer, similarMovies, isLoading, isError } = useSelector<AppState, MovieDetailsState>((state) => state.movieDetails);
+  const [isPosterHidden, setIsPosterHidden] = useState<boolean>(false);
+  
   useEffect(() => {
     if (id) {
       dispatch(fetchMovieDetails(id));
-    }
+    } 
   }, [dispatch, id]);
+
+  const handleIframeClick = () => {
+    if (window.innerWidth < 1024) { 
+      setIsPosterHidden(true);
+    }
+  };
 
   const formatReviewCount = (count: number) => {
     if (count >= 1000 && count < 1000000) {
@@ -42,7 +46,7 @@ export default function Movie(): JSX.Element {
  
 
   return (
-    <div className="md:mx-[80px] md:mb-[74px] mx-[21px]  mt-[42px]">
+    <div className="md:mx-[80px] md:mb-[74px] mx-[21px] mt-[42px]">
       <div className="flex items-center justify-between w-full">
         <div className="font-roboto font-[700] md:text-[40px] text-[30px] md:leading-[46.88px] leading-[35.16px]">
           <h1>{details?.title}</h1>
@@ -62,13 +66,15 @@ export default function Movie(): JSX.Element {
         </div>
       </div>
       <div className="relative flex flex-col lg:flex-row pt-[27px] lg:pb-[51px] pb-[40px] justify-between items-start w-full">
-        <div className="absolute z-50 order-2 lg:order-1 lg:relative md:top-28 md:left-8 top-[84px] left-[28px]  lg:left-0 lg:top-0 ">
+        {!isPosterHidden && (
+          <div className="absolute z-50 order-2 lg:order-1 lg:relative md:top-28 md:left-8 top-[84px] left-[28px]  lg:left-0 lg:top-0 ">
           <img
             src={`https://image.tmdb.org/t/p/original${details?.poster_path}`}
             alt="#"
             className="lg:h-[291px] lg:w-[196px] md:w-[140px] md:h-[187px] w-[98px] h-[146px] order-2 rounded-[20px] object-cover"
           />
         </div>
+        )}
         <div className="relative order-3 lg:order-2 flex-grow lg:pl-5 pl-0  mt-[36px] lg:mt-0  w-full lg:w-auto">
           <div className="flex space-x-5">
             {details?.genres?.slice(0, 2).map((genre: Genres) => (
@@ -103,48 +109,32 @@ export default function Movie(): JSX.Element {
           <iframe
             title="YouTube Trailer"
             className="lg:h-[291px] lg:w-[521px] md:w-[80vw] md:h-[250px] w-[93vw] order-1 h-[187px] rounded-[20px]"
-            src={`https://www.youtube.com/embed/${
-              trailer && trailer.length > 0 ? trailer[0].key : "defaultKey"
-            }?autoplay=0&modestbranding=0&controls=1&showinfo=0&rel=0`}
+            src={`https://www.youtube.com/embed/${trailer && trailer.length > 0 ? trailer[0].key : "defaultKey"}?autoplay=0&modestbranding=0&controls=1&showinfo=0&rel=0`}
             allowFullScreen
+            onClick={handleIframeClick}
           ></iframe>
         </div>
       </div>
       <div className="flex flex-col md:flex-row md:items-center space-x-0 md:space-x-[30px] font-roboto font-[700]">
         <h2 className="text-[30px] leading-[35.16px] mb-4 md:mb-0">Seasons</h2>
         <div className="flex flex-wrap md:flex-nowrap space-x-[7.73px]">
-          <Link
-            to={""}
-            className="rounded-[10px] py-[10px] px-[15.30px] bg-[#D9D9D9] text-[20px] leading-[23.44px] mb-2 md:mb-0"
-          >
+          <Link to={""} className="rounded-[10px] py-[10px] px-[15.30px] bg-[#D9D9D9] text-[20px] leading-[23.44px] mb-2 md:mb-0">
             1
           </Link>
-          <Link
-            to={""}
-            className="rounded-[10px] py-[10px] px-[15.30px] bg-[#D9D9D9] text-[20px] leading-[23.44px] mb-2 md:mb-0"
-          >
+          <Link to={""} className="rounded-[10px] py-[10px] px-[15.30px] bg-[#D9D9D9] text-[20px] leading-[23.44px] mb-2 md:mb-0">
             2
           </Link>
-          <Link
-            to={""}
-            className="rounded-[10px] py-[10px] px-[15.30px] bg-[#D9D9D9] text-[20px] leading-[23.44px] mb-2 md:mb-0"
-          >
+          <Link to={""} className="rounded-[10px] py-[10px] px-[15.30px] bg-[#D9D9D9] text-[20px] leading-[23.44px] mb-2 md:mb-0">
             3
           </Link>
-          <Link
-            to={""}
-            className="rounded-[10px] py-[10px] px-[15.30px] bg-[#D9D9D9] text-[20px] leading-[23.44px] mb-2 md:mb-0"
-          >
+          <Link to={""} className="rounded-[10px] py-[10px] px-[15.30px] bg-[#D9D9D9] text-[20px] leading-[23.44px] mb-2 md:mb-0">
             4
           </Link>
         </div>
       </div>
-      <div className=" flex flex-wrap justify-center sm:justify-center space-y-4 sm:space-y-0 sm:space-x-0 md:space-x-4 lg:space-x-4 mt-[34.73px]">
+      <div className="flex flex-wrap justify-center sm:justify-center space-y-4 sm:space-y-0 sm:space-x-0 md:space-x-4 lg:space-x-4 mt-[34.73px]">
         {similarMovies?.slice(0, 4).map((movie: SimilarMovies) => (
-          <div
-            key={movie.id}
-            className="flex flex-col w-full sm:w-[calc(100%-20px)] md:w-[calc(50%-20px)] lg:w-[calc(25%-20px)] h-[202px] rounded-[20px] bg-[#FFFFFF]"
-          >
+          <div key={movie.id} className="flex flex-col w-full sm:w-[calc(100%-20px)] md:w-[calc(50%-20px)] lg:w-[calc(25%-20px)] h-[202px] rounded-[20px] bg-[#FFFFFF]">
             <Link to={`/movie/${movie.id}`}>
               <img
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -152,7 +142,7 @@ export default function Movie(): JSX.Element {
                 className="h-[142px] w-full rounded-t-[20px]"
               />
               <div className="font-roboto font-bold text-base leading-[23.44px] flex items-center px-[17px] py-2">
-                <h3>{movie.title}</h3>
+              <h3 className="line-clamp-2">{movie.title}</h3>
               </div>
             </Link>
           </div>

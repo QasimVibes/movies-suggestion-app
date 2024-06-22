@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import { CardProps } from "../../types";
 
-export default function Card({ reviewStar = false, item }: CardProps): JSX.Element {
+export default function Card({
+  reviewStar = false,
+  item,
+}: CardProps): JSX.Element {
   return (
     <>
       <div className="inline-block bg-transparent relative">

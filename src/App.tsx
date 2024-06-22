@@ -3,18 +3,27 @@ import Home from "./pages/Home";
 import Search from "./pages/Search";
 import Movie from "./pages/Movie";
 import { Navbar } from "./components";
-import { Route, Routes } from "react-router-dom";
-
+import { Route, Routes, useLocation } from "react-router-dom";
+import { Error } from "./components";
 
 function App() {
+  const location = useLocation();
+  const showNavbar =
+    location.pathname === "/" ||
+    location.pathname.startsWith("/search") ||
+    location.pathname.startsWith("/movie");
   return (
     <>
       <div className="App">
-        <Navbar />
+        {showNavbar && <Navbar />}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<Search />} />
           <Route path="/movie/:id" element={<Movie />} />
+          <Route
+            path="*"
+            element={<Error message={"Page Not Found"} statusCode={404} />}
+          />
         </Routes>
       </div>
     </>

@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import AxiosInstance from "../../instance/AxiosInstance";
 import { MovieCardState, PopularMovies, ErrorResponse, TrendingMovies, ReleasesMovies, FetchMovieCardPayload} from "../../types";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 
 
 const initialState: MovieCardState = {
@@ -25,7 +25,7 @@ export const fetchMovieCard = createAsyncThunk<FetchMovieCardPayload,void,{ reje
 
     return { popularMoviesData, trendingMoviesData, releasesMoviesData };
     
-  } catch (err: AxiosError | any) {
+  } catch (err: any) {
     if (err.response) {
       const data = err.response.data;
       return rejectWithValue({
