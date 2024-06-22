@@ -1,9 +1,11 @@
-import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import Home from "./Pages/Home";
-import Search from "./Pages/Search";
-import Navbar from "./components/Navbar/Navbar";
-import Movie from "./Pages/Movie";
+import Home from "./pages/Home";
+import Search from "./pages/Search";
+import Movie from "./pages/Movie";
+import { Navbar } from "./components";
+import { Route, Routes } from "react-router-dom";
+
+
 function App() {
   return (
     <>

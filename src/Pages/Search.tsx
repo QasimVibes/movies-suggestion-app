@@ -2,16 +2,20 @@ import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AnyAction, ThunkDispatch } from "@reduxjs/toolkit";
-import { RootState } from "../Store/Store";
-import { fetchMovies } from "../Store/Slices/SearchSlice";
+import { RootState } from "../store/Store";
+import { fetchMovies } from "../store/slices/SearchSlice";
+import { AppState, SearchState, Movies } from "../types";
+import { Loading, Error } from "../components";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-export default function Search() {
+export default function Search(): JSX.Element {
   const dispatch: ThunkDispatch<RootState, void, AnyAction> = useDispatch();
-  const stateData = useSelector((state: any) => state.search.movies);
+  const { movies, isLoading, isError } = useSelector<AppState, SearchState>(
+    (state) => state.search
+  );
   const query = useQuery();
   const searchQuery: string | null = query.get("query");
 
@@ -20,6 +24,19 @@ export default function Search() {
       dispatch(fetchMovies(searchQuery));
     }
   }, [dispatch, searchQuery]);
+
+  if (isLoading === true) {
+    return <Loading />;
+  }
+
+  if (isError !== null) {
+    return <Error message={isError.message} statusCode={isError.statusCode} />;
+  }
+
+  
+  if (movies === null || movies.length === 0 || movies[0].poster_path == null ) {
+    return <Error message="No results found" statusCode={404} />;
+  }
 
   return (
     <>
@@ -34,8 +51,8 @@ export default function Search() {
         </div>
         <div className="lg:pt-[20px] relative">
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-y-[31px] sm:gap-y-[20px] gap-x-[20px] sm:gap-x-[20px] relative">
-            {stateData?.map((item: any) =>
-              item.backdrop_path !== null ? (
+            {movies?.map((item: Movies) =>
+              item.poster_path !== null ? (
                 <Link key={item.id} to={`/movie/${item.id}`}>
                   <div className="relative">
                     <img

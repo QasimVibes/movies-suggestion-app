@@ -36,7 +36,7 @@ To run this project locally, follow these steps:
     Create a .env file in the root directory and add your TMDb API key:
 
     ```bash
-    REACT_APP_TMDB_API_KEY=your_tmdb_api_key
+    REACT_APP_API_KEY=your_tmdb_api_key
 
 4. **Start the development server:**
 

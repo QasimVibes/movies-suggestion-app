@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
+import { CardProps } from "../../types";
 
-export default function Card({ reviewStar = false, ...item }) {
+export default function Card({ reviewStar = false, item }: CardProps): JSX.Element {
   return (
     <>
       <div className="inline-block bg-transparent relative">
@@ -17,7 +18,7 @@ export default function Card({ reviewStar = false, ...item }) {
               </div>
               {reviewStar && (
                 <div className="absolute top-[17px] left-[12px] text-white font-caros-bold text-[15px] font-semibold leading-[9.24px] text-left">
-                  ⭐ {item.vote_average.toFixed(1)}
+                  ⭐ {item.vote_average?.toFixed(1)}
                 </div>
               )}
             </Link>

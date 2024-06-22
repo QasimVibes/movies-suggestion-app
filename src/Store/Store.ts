@@ -1,13 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
-import MovieCardSlice from "./Slices/MovieCardSlice";
-import SearchSlice from "./Slices/SearchSlice";
-import movieDetailsSlice from "./Slices/MovieDetails";
+import MovieCardSlice from "./slices/MovieCardSlice";
+import MovieDetailsSlice from "./slices/MovieDetailsSlice";
+import SearchSlice from "./slices/SearchSlice";
 
 const store = configureStore({
   reducer: {
     movieCard: MovieCardSlice,
     search: SearchSlice,
-    movieDetails: movieDetailsSlice,
+    movieDetails: MovieDetailsSlice,
   },
 });
 

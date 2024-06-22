@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-export default function Navbar() {
+export default function Navbar(): JSX.Element {
   const navigate = useNavigate();
-  const [showInput, setShowInput] = useState(false);
-  const [inputValue, setInputValue] = useState("");
+  const [showInput, setShowInput] = useState<boolean>(false);
+  const [inputValue, setInputValue] = useState<string>("");
 
   const query = useQuery();
-  const searchQuery = query.get("query");
+  const searchQuery: string | null = query.get("query");
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" && inputValue.length > 0) {

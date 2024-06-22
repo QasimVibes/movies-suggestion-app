@@ -1,33 +1,43 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
-import AxiosInstance from "../../Instance/AxiosInstance";
-
-export interface SearchState {
-  isLoading: boolean;
-  isError: boolean;
-  movies: string[] | null;
-}
+import AxiosInstance from "../../instance/AxiosInstance";
+import { SearchState, Movies, ErrorResponse, FetchSearchPayload } from "../../types";
+import { AxiosError, AxiosResponse } from "axios";
 
 const initialState: SearchState = {
   isLoading: false,
-  isError: false,
+  isError: null,
   movies: null,
 };
 
-export const fetchMovies = createAsyncThunk(
-  "search/fetchMovies",
-  async (query: string, thunkAPI) => {
-    try {
-      const movies = await AxiosInstance.get(`/search/movie?query=${query}`);
-      const moviesData = movies.data.results || [];
-      return moviesData;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        "Something went wrong while Searching movies data"
-      );
+export const fetchMovies = createAsyncThunk<FetchSearchPayload,string,{ rejectValue: ErrorResponse }>
+("search/fetchMovies", async (query: string, { rejectWithValue }) => {
+  try {
+    const response: AxiosResponse<{ results: Movies[] }> = await AxiosInstance.get<{ results: Movies[] }>(`/search/movie?query=${query}`);
+    
+    const movieDetailsData: Movies[] = response.data.results;
+
+    return { movieDetailsData };
+
+  } catch (err: AxiosError | any) {
+    if (err.response) {
+      const data = err.response.data;
+      return rejectWithValue({
+        message: data.status_message || "Unknown error",
+        statusCode: err.response.status,
+      });
+    } else if (err.request) {
+      return rejectWithValue({
+        message: "Network error",
+        statusCode: 500,
+      });
+    } else {
+      return rejectWithValue({
+        message: err.message || "Unknown error",
+        statusCode: 500,
+      });
     }
   }
-);
+});
 
 export const SearchSlice = createSlice({
   name: "search",
@@ -36,18 +46,25 @@ export const SearchSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchMovies.pending, (state) => {
       state.isLoading = true;
+      state.isError = null;
     });
-    builder.addCase(
-      fetchMovies.fulfilled,
-      (state, action: PayloadAction<any>) => {
+    builder
+      .addCase(fetchMovies.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.movies = action.payload;
-      }
-    );
-    builder.addCase(fetchMovies.rejected, (state) => {
-      state.isLoading = false;
-      state.isError = true;
-    });
+        state.isError = null;
+        state.movies = action.payload.movieDetailsData;
+      })
+      .addCase(fetchMovies.rejected, (state, action) => {
+        state.isLoading = false;
+        if (action.payload) {
+          state.isError = action.payload;
+        } else {
+          state.isError = {
+            message: action.error.message || "Unknown error",
+            statusCode: 500,
+          };
+        }
+      });
   },
 });
 
