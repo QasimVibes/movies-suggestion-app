@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
+import searchIcon from "../../assets/search.png"
+import plusIcon from "../../assets/plus.png"
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -37,10 +39,10 @@ export default function Navbar(): JSX.Element {
           onClick={() => setShowInput((prev) => !prev)}
           className={`${showInput ? "hidden" : ""}`}
         >
-          <img src="/search.png" alt="Search" />
+          <img src={searchIcon} alt="Search" />
         </button>
         <button>
-          <img src="/plus.png" alt="Add" />
+          <img src={plusIcon} alt="Add" />
         </button>
       </div>
       <div

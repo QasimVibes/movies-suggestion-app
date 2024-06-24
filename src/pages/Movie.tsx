@@ -6,6 +6,7 @@ import { RootState } from "../store/Store";
 import { fetchMovieDetails } from "../store/slices/MovieDetailsSlice";
 import { AppState, MovieDetailsState, Genres, SimilarMovies } from "../types";
 import { Loading, Error } from "../components";
+import bookmarkIcon from "../assets/bookmark.png"
 
 export default function Movie(): JSX.Element {
   const { id } = useParams();
@@ -57,7 +58,7 @@ export default function Movie(): JSX.Element {
             className="flex items-center font-roboto font-[500] text-[15px] leading-[17.58px] py-[11px] px-[30px]"
           >
             <img
-              src="/bookmark.png"
+              src={bookmarkIcon}
               alt="bookmark"
               className="w-[18.2px] h-[23.39px] mr-[10px]"
             />
