@@ -8,7 +8,7 @@ export default function Card({
   return (
     <>
       <div className="inline-block bg-transparent relative">
-        <div className="w-[158px] h-[234px] md:w-[177px] md:h-[263px] mr-[21px] overflow-hidden transition-shadow duration-300 ease-in-out relative">
+        <div className="w-[158px] h-[234px] md:w-[177px] md:h-[263px] mr-[21px] md:mr-[22px] overflow-hidden transition-shadow duration-300 ease-in-out relative">
           {item?.poster_path && (
             <Link to={`/movie/${item.id}`}>
               <div className="relative">

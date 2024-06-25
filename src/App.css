@@ -9,3 +9,33 @@ body {
 .hide-scroll-bar::-webkit-scrollbar {
   display: none; /* for Chrome, Safari, and Opera */
 }
+
+@media (min-width: 1238px) and (max-width: 1319px) {
+  .tailer-card {
+    width: 450px !important;
+  }
+}
+
+@media (min-width: 1138px) and (max-width: 1237px) {
+  .tailer-card {
+    width: 365px !important;
+    height: 235px !important;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1237px) {
+  .tailer-card {
+    width: 365px !important;
+    height: 235px !important;
+  }
+  .shrink-div {
+    width: 90% !important;
+  }
+}
+
+@media (min-width: 100px) and (max-width: 330px) {
+  .gerner-link {
+    font-size: 14px !important;
+    padding: 3px 9px;
+  }
+}
