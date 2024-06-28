@@ -1,6 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import AxiosInstance from "../../instance/AxiosInstance";
-import { MovieDetailsData, SimilarMovies, Trailer, MovieDetailsState, ErrorResponse, FetchMovieDetailsPayload } from "../../types";
+import AxiosInstance from "../../instance/axiosInstance";
+import {
+  MovieDetailsData,
+  SimilarMovies,
+  Trailer,
+  MovieDetailsState,
+  FetchMovieDetailsPayload,
+  AsyncThunkReturnType,
+  AsyncThunkArgumentType,
+  AsyncThunkConfig,
+} from "../../types/types";
 import { AxiosResponse } from "axios";
 
 const initialState: MovieDetailsState = {
@@ -11,22 +20,32 @@ const initialState: MovieDetailsState = {
   similarMovies: null,
 };
 
-export const fetchMovieDetails = createAsyncThunk<FetchMovieDetailsPayload,string,{ rejectValue: ErrorResponse }>
-("movieDetails/fetchMovieDetails", async (id: string, { rejectWithValue }) => {
+export const fetchMovieDetails = createAsyncThunk<
+  AsyncThunkReturnType,
+  AsyncThunkArgumentType,
+  AsyncThunkConfig
+>("movieDetails/fetchMovieDetails", async (id: string, { rejectWithValue }) => {
   try {
-    const movieDetailsResponse: AxiosResponse<MovieDetailsData> = await AxiosInstance.get<MovieDetailsData>(`/movie/${id}`);
-    const trailerResponse: AxiosResponse<{ results: Trailer[] }> = await AxiosInstance.get<{ results: Trailer[] }>(`/movie/${id}/videos`);
-    const similarMoviesResponse: AxiosResponse<{ results: SimilarMovies[] }> = await AxiosInstance.get<{results: SimilarMovies[];}>(`/movie/${id}/similar`);
-    
+    const movieDetailsResponse: AxiosResponse<MovieDetailsData> =
+      await AxiosInstance.get<MovieDetailsData>(`/movie/${id}`);
+    const trailerResponse: AxiosResponse<{ results: Trailer[] }> =
+      await AxiosInstance.get<{ results: Trailer[] }>(`/movie/${id}/videos`);
+    const similarMoviesResponse: AxiosResponse<{ results: SimilarMovies[] }> =
+      await AxiosInstance.get<{ results: SimilarMovies[] }>(
+        `/movie/${id}/similar`
+      );
+
     const videos: Trailer[] = trailerResponse.data.results;
     const movieDetailsData: MovieDetailsData = movieDetailsResponse.data;
     const similarMovies: SimilarMovies[] = similarMoviesResponse.data.results;
-    
-    const trailer =videos.find((video) => video.type === "Trailer" && video.site === "YouTube") || null;
+
+    const trailer =
+      videos.find(
+        (video) => video.type === "Trailer" && video.site === "YouTube"
+      ) || null;
     const trailerData = trailer ? [trailer] : [];
 
     return { movieDetailsData, trailerData, similarMovies };
-    
   } catch (err: any) {
     if (err.response) {
       const data = err.response.data;
@@ -61,9 +80,10 @@ export const MovieDetailsSlice = createSlice({
       .addCase(fetchMovieDetails.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isError = null;
-        state.details = action.payload.movieDetailsData;
-        state.trailer = action.payload.trailerData;
-        state.similarMovies = action.payload.similarMovies;
+        const payload = action.payload as FetchMovieDetailsPayload;
+        state.details = payload.movieDetailsData;
+        state.trailer = payload.trailerData;
+        state.similarMovies = payload.similarMovies;
       })
       .addCase(fetchMovieDetails.rejected, (state, action) => {
         state.isLoading = false;

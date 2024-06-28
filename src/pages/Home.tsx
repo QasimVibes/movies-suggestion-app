@@ -1,19 +1,19 @@
-import { PopularMovie,PopularReleases,Trending,Loading, Error } from "../components";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchMovieCard } from "../store/slices/MovieCardSlice";
-import { AnyAction, ThunkDispatch } from "@reduxjs/toolkit";
-import { RootState } from "../store/Store";
-import { AppState, MovieCardState } from "../types";
+import { RootState } from "../store/store";
+import { MovieCardState } from "../types/types";
+import PopularMovie from "../components/popularMovies/PopularMovie";
+import PopularReleases from "../components/popularReleases/PopularReleases";
+import Trending from "../components/trending/Trending";
+import Loading from "../components/loading/Loading";
+import Error from "../components/error/Error";
+import useFetchData from "../hooks/useFetchData";
 
 export default function Home(): JSX.Element {
-  const dispatch: ThunkDispatch<RootState, void, AnyAction> = useDispatch();
- 
-  useEffect(() => {
-    dispatch(fetchMovieCard());
-  }, [dispatch]);
-
-  const {popularMovies, isLoading, isError, trendingMovies, releasesMovies} = useSelector<AppState, MovieCardState>((state) => state.movieCard);
+  const { popularMovies, isLoading, isError, trendingMovies, releasesMovies } =
+    useFetchData<MovieCardState>(
+      (state: RootState) => state.movieCard,
+      null,
+      null
+    );
 
   if (isLoading === true) {
     return <Loading />;
@@ -33,7 +33,7 @@ export default function Home(): JSX.Element {
           <Trending trendingMovies={trendingMovies} />
         </div>
         <div className="md:col-span-3 md:mt-0 mt-[48px] row-start-2 md:row-start-3 lg:row-start-2">
-          <PopularReleases releasesMovies={releasesMovies}/>
+          <PopularReleases releasesMovies={releasesMovies} />
         </div>
       </div>
     </div>

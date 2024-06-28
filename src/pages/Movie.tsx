@@ -1,26 +1,20 @@
 import { Link, useParams } from "react-router-dom";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AnyAction, ThunkDispatch } from "@reduxjs/toolkit";
-import { RootState } from "../store/Store";
-import { fetchMovieDetails } from "../store/slices/MovieDetailsSlice";
-import { AppState, MovieDetailsState, Genres, SimilarMovies } from "../types";
-import { Loading, Error } from "../components";
+import { RootState } from "../store/store";
+import { MovieDetailsState, Genres, SimilarMovies } from "../types/types";
 import bookmarkIcon from "../assets/bookmark.png";
+import Loading from "../components/loading/Loading";
+import Error from "../components/error/Error";
+import { colors } from "../constants/colors";
+import useFetchData from "../hooks/useFetchData";
 
 export default function Movie(): JSX.Element {
   const { id } = useParams();
-  const dispatch: ThunkDispatch<RootState, void, AnyAction> = useDispatch();
-  const { details, trailer, similarMovies, isLoading, isError } = useSelector<
-    AppState,
-    MovieDetailsState
-  >((state) => state.movieDetails);
-
-  useEffect(() => {
-    if (id) {
-      dispatch(fetchMovieDetails(id));
-    }
-  }, [dispatch, id]);
+  const { details, trailer, similarMovies, isLoading, isError } =
+    useFetchData<MovieDetailsState>(
+      (state: RootState) => state.movieDetails,
+      id,
+      null
+    );
 
   const formatReviewCount = (count: number) => {
     if (count >= 1000 && count < 1000000) {
@@ -46,7 +40,7 @@ export default function Movie(): JSX.Element {
         <div className="font-roboto font-[700] md:text-[40px] text-[30px] md:leading-[46.88px] leading-[35.16px]">
           <h1>{details?.title}</h1>
         </div>
-        <div className="hidden lg:flex bg-[#D9D9D9] rounded-[30px]">
+        <div className={`hidden lg:flex ${colors.bgSecondary}  rounded-[30px]`}>
           <Link
             to={""}
             className="flex items-center font-roboto font-[500] text-[15px] leading-[17.58px] py-[11px] px-[30px]"
@@ -72,11 +66,11 @@ export default function Movie(): JSX.Element {
           <div className="flex space-x-5">
             {details?.genres?.slice(0, 2).map((genre: Genres) => (
               <Link
-                key={genre.id}
+                key={genre?.id}
                 to={""}
-                className="font-roboto gerner-link font-[500] text-[18px] leading-[21.09px] py-[6px] px-[18px] rounded-[20px] border border-black"
+                className={`font-roboto gerner-link font-[500] text-[18px] leading-[21.09px] py-[6px] px-[18px] rounded-[20px] border ${colors.borderBlack}`}
               >
-                {genre.name}
+                {genre?.name}
               </Link>
             ))}
           </div>
@@ -90,12 +84,14 @@ export default function Movie(): JSX.Element {
               <p className="text-[18px]">IMDB Rating</p>
               <p className="leading-[17.58px] text-center  font-roboto text-[15px] font-[400] ">
                 ⭐ {details?.vote_average?.toFixed(1)}
-                <span className="text-[#636363] leading-[14.06px] text-[12px]">
+                <span
+                  className={`${colors.textGrey} leading-[14.06px] text-[12px]`}
+                >
                   /10
                 </span>
               </p>
             </div>
-            <div className="leading-[17.58px] text-[15px] text-[#636363]">
+            <div className={`leading-[17.58px] text-[15px] ${colors.textGrey}`}>
               <p>{formatReviewCount(details?.vote_count || 0)} Reviews</p>
             </div>
           </div>
@@ -105,7 +101,7 @@ export default function Movie(): JSX.Element {
             title="YouTube Trailer"
             className="tailer-card lg:h-[291px] lg:w-[521px] md:w-[80vw] md:h-[250px] w-[90vw] order-1 h-[187px] rounded-[20px]"
             src={`https://www.youtube.com/embed/${
-              trailer && trailer.length > 0 ? trailer[0].key : "defaultKey"
+              trailer && trailer?.length > 0 ? trailer[0]?.key : "defaultKey"
             }?autoplay=0&modestbranding=0&controls=1&showinfo=0&rel=0`}
             allowFullScreen
           ></iframe>
@@ -116,25 +112,25 @@ export default function Movie(): JSX.Element {
         <div className="flex flex-wrap md:flex-nowrap space-x-[7.73px]">
           <Link
             to={""}
-            className="rounded-[10px] py-[10px] px-[15.30px] bg-[#D9D9D9] text-[20px] leading-[23.44px] mb-2 md:mb-0"
+            className={`rounded-[10px] py-[10px] px-[15.30px] ${colors.bgSecondary} text-[20px] leading-[23.44px] mb-2 md:mb-0`}
           >
             1
           </Link>
           <Link
             to={""}
-            className="rounded-[10px] py-[10px] px-[15.30px] bg-[#D9D9D9] text-[20px] leading-[23.44px] mb-2 md:mb-0"
+            className={`rounded-[10px] py-[10px] px-[15.30px] ${colors.bgSecondary} text-[20px] leading-[23.44px] mb-2 md:mb-0`}
           >
             2
           </Link>
           <Link
             to={""}
-            className="rounded-[10px] py-[10px] px-[15.30px] bg-[#D9D9D9] text-[20px] leading-[23.44px] mb-2 md:mb-0"
+            className={`rounded-[10px] py-[10px] px-[15.30px] ${colors.bgSecondary} text-[20px] leading-[23.44px] mb-2 md:mb-0`}
           >
             3
           </Link>
           <Link
             to={""}
-            className="rounded-[10px] py-[10px] px-[15.30px] bg-[#D9D9D9] text-[20px] leading-[23.44px] mb-2 md:mb-0"
+            className={`rounded-[10px] py-[10px] px-[15.30px] ${colors.bgSecondary} text-[20px] leading-[23.44px] mb-2 md:mb-0`}
           >
             4
           </Link>
@@ -143,19 +139,21 @@ export default function Movie(): JSX.Element {
       <div className="flex flex-wrap justify-start mt-[34.73px]">
         {similarMovies?.slice(0, 4).map((movie: SimilarMovies, index) => (
           <div
-            key={movie.id}
-            className={`flex flex-col w-full sm:w-[calc(100%-20px)] md:w-[calc(50%-10px)] lg:w-[calc(25%-15px)] h-[202px] rounded-[20px] bg-[#FFFFFF] mb-4 ${
+            key={movie?.id}
+            className={`flex flex-col w-full sm:w-[calc(100%-20px)] md:w-[calc(50%-10px)] lg:w-[calc(25%-15px)] h-[202px] rounded-[20px] ${
+              colors.bgWhite
+            } mb-4 ${
               index % 2 !== 0 && index % 4 !== 0 ? "md:ml-[20px]" : ""
             } ${index % 4 !== 0 ? "lg:ml-[20px]" : ""}`}
           >
-            <Link to={`/movie/${movie.id}`}>
+            <Link to={`/movie/${movie?.id}`}>
               <img
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                alt={movie.title}
+                src={`https://image.tmdb.org/t/p/w500${movie?.poster_path}`}
+                alt={movie?.title}
                 className="h-[142px] w-full rounded-t-[20px]"
               />
               <div className="font-roboto font-bold text-base leading-[23.44px] flex items-center px-[17px] py-2">
-                <h3 className="line-clamp-2">{movie.title}</h3>
+                <h3 className="line-clamp-2">{movie?.title}</h3>
               </div>
             </Link>
           </div>

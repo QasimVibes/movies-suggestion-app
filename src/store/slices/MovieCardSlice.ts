@@ -1,8 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import AxiosInstance from "../../instance/AxiosInstance";
-import { MovieCardState, PopularMovies, ErrorResponse, TrendingMovies, ReleasesMovies, FetchMovieCardPayload} from "../../types";
+import AxiosInstance from "../../instance/axiosInstance";
+import {
+  MovieCardState,
+  PopularMovies,
+  TrendingMovies,
+  ReleasesMovies,
+  FetchMovieCardPayload,
+  AsyncThunkReturnType,
+  AsyncThunkConfig,
+} from "../../types/types";
 import { AxiosResponse } from "axios";
-
 
 const initialState: MovieCardState = {
   isLoading: false,
@@ -12,19 +19,28 @@ const initialState: MovieCardState = {
   releasesMovies: null,
 };
 
-export const fetchMovieCard = createAsyncThunk<FetchMovieCardPayload,void,{ rejectValue: ErrorResponse }>
-("movieCard/fetchMovieCard", async (_, { rejectWithValue }) => {
+export const fetchMovieCard = createAsyncThunk<
+  AsyncThunkReturnType,
+  void,
+  AsyncThunkConfig
+>("movieCard/fetchMovieCard", async (_, { rejectWithValue }) => {
   try {
-    const popularMovies: AxiosResponse<{ results: PopularMovies[] }> =await AxiosInstance.get<{ results: PopularMovies[] }>("/movie/popular");
-    const trendingMovies: AxiosResponse<{ results: TrendingMovies[] }> =await AxiosInstance.get<{ results: TrendingMovies[] }>("/trending/movie/week");
-    const releasesMovies: AxiosResponse<{ results: ReleasesMovies[] }> =await AxiosInstance.get<{ results: ReleasesMovies[] }>("/movie/top_rated");
-    
+    const popularMovies: AxiosResponse<{ results: PopularMovies[] }> =
+      await AxiosInstance.get<{ results: PopularMovies[] }>("/movie/popular");
+    const trendingMovies: AxiosResponse<{ results: TrendingMovies[] }> =
+      await AxiosInstance.get<{ results: TrendingMovies[] }>(
+        "/trending/movie/week"
+      );
+    const releasesMovies: AxiosResponse<{ results: ReleasesMovies[] }> =
+      await AxiosInstance.get<{ results: ReleasesMovies[] }>(
+        "/movie/top_rated"
+      );
+
     const popularMoviesData: PopularMovies[] = popularMovies.data.results;
     const trendingMoviesData: TrendingMovies[] = trendingMovies.data.results;
     const releasesMoviesData: ReleasesMovies[] = releasesMovies.data.results;
 
     return { popularMoviesData, trendingMoviesData, releasesMoviesData };
-    
   } catch (err: any) {
     if (err.response) {
       const data = err.response.data;
@@ -59,9 +75,10 @@ export const MovieCardSlice = createSlice({
       .addCase(fetchMovieCard.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isError = null;
-        state.popularMovies = action.payload.popularMoviesData;
-        state.trendingMovies = action.payload.trendingMoviesData;
-        state.releasesMovies = action.payload.releasesMoviesData;
+        const payload = action.payload as FetchMovieCardPayload;
+        state.popularMovies = payload.popularMoviesData;
+        state.trendingMovies = payload.trendingMoviesData;
+        state.releasesMovies = payload.releasesMoviesData;
       })
       .addCase(fetchMovieCard.rejected, (state, action) => {
         state.isLoading = false;

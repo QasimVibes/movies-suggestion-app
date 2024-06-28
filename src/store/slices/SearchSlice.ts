@@ -1,6 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import AxiosInstance from "../../instance/AxiosInstance";
-import { SearchState, Movies, ErrorResponse, FetchSearchPayload } from "../../types";
+import AxiosInstance from "../../instance/axiosInstance";
+import {
+  SearchState,
+  Movies,
+  FetchSearchPayload,
+  AsyncThunkReturnType,
+  AsyncThunkArgumentType,
+  AsyncThunkConfig,
+} from "../../types/types";
 import { AxiosResponse } from "axios";
 
 const initialState: SearchState = {
@@ -9,15 +16,20 @@ const initialState: SearchState = {
   movies: null,
 };
 
-export const fetchMovies = createAsyncThunk<FetchSearchPayload,string,{ rejectValue: ErrorResponse }>
-("search/fetchMovies", async (query: string, { rejectWithValue }) => {
+export const fetchMovies = createAsyncThunk<
+  AsyncThunkReturnType,
+  AsyncThunkArgumentType,
+  AsyncThunkConfig
+>("search/fetchMovies", async (query: string, { rejectWithValue }) => {
   try {
-    const response: AxiosResponse<{ results: Movies[] }> = await AxiosInstance.get<{ results: Movies[] }>(`/search/movie?query=${query}`);
-    
+    const response: AxiosResponse<{ results: Movies[] }> =
+      await AxiosInstance.get<{ results: Movies[] }>(
+        `/search/movie?query=${query}`
+      );
+
     const movieDetailsData: Movies[] = response.data.results;
 
     return { movieDetailsData };
-
   } catch (err: any) {
     if (err.response) {
       const data = err.response.data;
@@ -52,7 +64,8 @@ export const SearchSlice = createSlice({
       .addCase(fetchMovies.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isError = null;
-        state.movies = action.payload.movieDetailsData;
+        const payload = action.payload as FetchSearchPayload;
+        state.movies = payload.movieDetailsData;
       })
       .addCase(fetchMovies.rejected, (state, action) => {
         state.isLoading = false;

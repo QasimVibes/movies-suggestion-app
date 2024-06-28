@@ -2,9 +2,10 @@ import "./App.css";
 import Home from "./pages/Home";
 import Search from "./pages/Search";
 import Movie from "./pages/Movie";
-import { Navbar } from "./components";
 import { Route, Routes, useLocation } from "react-router-dom";
-import { Error } from "./components";
+import Navbar from "./components/navbar/Navbar";
+import Error from "./components/error/Error";
+import { colors } from "./constants/colors";
 
 function App() {
   const location = useLocation();
@@ -14,7 +15,7 @@ function App() {
     location.pathname.startsWith("/movie");
   return (
     <>
-      <div className="App">
+      <div className={`App ${colors.bgPrimary}`}>
         {showNavbar && <Navbar />}
         <Routes>
           <Route path="/" element={<Home />} />
