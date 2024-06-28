@@ -5,7 +5,6 @@ import Movie from "./pages/Movie";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
 import Error from "./components/error/Error";
-import { colors } from "./constants/colors";
 
 function App() {
   const location = useLocation();
@@ -15,7 +14,7 @@ function App() {
     location.pathname.startsWith("/movie");
   return (
     <>
-      <div className={`App ${colors.bgPrimary}`}>
+      <div className={`App`}>
         {showNavbar && <Navbar />}
         <Routes>
           <Route path="/" element={<Home />} />

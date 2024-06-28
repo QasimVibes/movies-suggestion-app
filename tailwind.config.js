@@ -13,7 +13,12 @@ module.exports = {
     },
   },
   plugins: [
-    function ({ addUtilities }) {
+    function ({ addBase, addUtilities }) {
+      addBase({
+        body: {
+          backgroundColor: "#ebeaea",
+        },
+      });
       const newUtilities = {
         "@media (min-width: 1238px) and (max-width: 1319px)": {
           ".tailer-card": {
