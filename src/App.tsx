@@ -1,6 +1,13 @@
+<<<<<<< HEAD
 import Home from "./pages/home/Home";
 import Search from "./pages/search/Search";
 import Movie from "./pages/movie/Movie";
+=======
+import "./App.css";
+import Home from "./pages/Home";
+import Search from "./pages/Search";
+import Movie from "./pages/Movie";
+>>>>>>> 2dab8c151b39f5185b3a5450fc8e6feedb708355
 import { Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
 import Error from "./components/error/Error";

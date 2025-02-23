@@ -1,5 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+<<<<<<< HEAD
 import AxiosInstance from "../../utills/instance/axiosInstance";
+=======
+import AxiosInstance from "../../instance/axiosInstance";
+>>>>>>> 2dab8c151b39f5185b3a5450fc8e6feedb708355
 import {
   MovieDetailsData,
   SimilarMovies,
@@ -26,6 +30,7 @@ export const fetchMovieDetails = createAsyncThunk<
   AsyncThunkConfig
 >("movieDetails/fetchMovieDetails", async (id: string, { rejectWithValue }) => {
   try {
+<<<<<<< HEAD
     const movieDetailsResponse: AxiosResponse = await AxiosInstance.get(
       `/movie/${id}`
     );
@@ -52,6 +57,20 @@ export const fetchMovieDetails = createAsyncThunk<
         return null;
       }
     });
+=======
+    const movieDetailsResponse: AxiosResponse<MovieDetailsData> =
+      await AxiosInstance.get<MovieDetailsData>(`/movie/${id}`);
+    const trailerResponse: AxiosResponse<{ results: Trailer[] }> =
+      await AxiosInstance.get<{ results: Trailer[] }>(`/movie/${id}/videos`);
+    const similarMoviesResponse: AxiosResponse<{ results: SimilarMovies[] }> =
+      await AxiosInstance.get<{ results: SimilarMovies[] }>(
+        `/movie/${id}/similar`
+      );
+
+    const videos: Trailer[] = trailerResponse.data.results;
+    const movieDetailsData: MovieDetailsData = movieDetailsResponse.data;
+    const similarMovies: SimilarMovies[] = similarMoviesResponse.data.results;
+>>>>>>> 2dab8c151b39f5185b3a5450fc8e6feedb708355
 
     const trailer =
       videos.find(

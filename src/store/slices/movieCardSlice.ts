@@ -1,5 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+<<<<<<< HEAD
 import AxiosInstance from "../../utills/instance/axiosInstance";
+=======
+import AxiosInstance from "../../instance/axiosInstance";
+>>>>>>> 2dab8c151b39f5185b3a5450fc8e6feedb708355
 import {
   MovieCardState,
   PopularMovies,
@@ -25,6 +29,7 @@ export const fetchMovieCard = createAsyncThunk<
   AsyncThunkConfig
 >("movieCard/fetchMovieCard", async (_, { rejectWithValue }) => {
   try {
+<<<<<<< HEAD
     const popularMovies: AxiosResponse = await AxiosInstance.get(
       "/movie/popular"
     );
@@ -34,6 +39,18 @@ export const fetchMovieCard = createAsyncThunk<
     const releasesMovies: AxiosResponse = await AxiosInstance.get(
       "/movie/top_rated"
     );
+=======
+    const popularMovies: AxiosResponse<{ results: PopularMovies[] }> =
+      await AxiosInstance.get<{ results: PopularMovies[] }>("/movie/popular");
+    const trendingMovies: AxiosResponse<{ results: TrendingMovies[] }> =
+      await AxiosInstance.get<{ results: TrendingMovies[] }>(
+        "/trending/movie/week"
+      );
+    const releasesMovies: AxiosResponse<{ results: ReleasesMovies[] }> =
+      await AxiosInstance.get<{ results: ReleasesMovies[] }>(
+        "/movie/top_rated"
+      );
+>>>>>>> 2dab8c151b39f5185b3a5450fc8e6feedb708355
 
     const popularMoviesData: PopularMovies[] = popularMovies.data.results;
     const trendingMoviesData: TrendingMovies[] = trendingMovies.data.results;

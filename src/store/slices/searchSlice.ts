@@ -1,5 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+<<<<<<< HEAD
 import AxiosInstance from "../../utills/instance/axiosInstance";
+=======
+import AxiosInstance from "../../instance/axiosInstance";
+>>>>>>> 2dab8c151b39f5185b3a5450fc8e6feedb708355
 import {
   SearchState,
   Movies,
@@ -22,9 +26,17 @@ export const fetchMovies = createAsyncThunk<
   AsyncThunkConfig
 >("search/fetchMovies", async (query: string, { rejectWithValue }) => {
   try {
+<<<<<<< HEAD
     const response: AxiosResponse = await AxiosInstance.get(
       `/search/movie?query=${query}`
     );
+=======
+    const response: AxiosResponse<{ results: Movies[] }> =
+      await AxiosInstance.get<{ results: Movies[] }>(
+        `/search/movie?query=${query}`
+      );
+
+>>>>>>> 2dab8c151b39f5185b3a5450fc8e6feedb708355
     const movieDetailsData: Movies[] = response.data.results;
 
     return { movieDetailsData };
